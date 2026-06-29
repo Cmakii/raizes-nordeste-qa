@@ -1,0 +1,66 @@
+{
+  info {
+    _postman_id a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d,
+    name Raízes do Nordeste - Validação de APIs (QA),
+    description Coleção de testes integrados para validação de contratos de API, cenários de exceção e logs de auditoria corporativa.,
+    schema httpsschema.getpostman.comjsoncollectionv2.1.0collection.json
+  },
+  item [
+    {
+      name Cenário Positivo - Criar Pedido Multicanal,
+      request {
+        method POST,
+        header [
+          { key Content-Type, value applicationjson }
+        ],
+        body {
+          mode raw,
+          raw {n  lojaId REC-01,n  canal TOTEM,n  cliente {n    cpf 12345678900n  },n  itens [n    { produtoId TAP-004, quantidade 1 }n  ]n}
+        },
+        url {
+          raw httpsapi.raizesdonordeste.com.brv1pedidos,
+          protocol https,
+          host [api, raizesdonordeste, com, br],
+          path [v1, pedidos]
+        }
+      }
+    },
+    {
+      name Cenário de Exceção - Simular Recusa do Gateway Externo,
+      request {
+        method POST,
+        header [
+          { key Content-Type, value applicationjson }
+        ],
+        body {
+          mode raw,
+          raw {n  pedidoId 98754,n  valor 50.00,n  cartaoToken tok_sandbox_12345,n  forçarErro SALDO_INSUFICIENTEn}
+        },
+        url {
+          raw httpsapi.raizesdonordeste.com.brv1pagamentosprocessar,
+          protocol https,
+          host [api, raizesdonordeste, com, br],
+          path [v1, pagamentos, processar]
+        }
+      }
+    },
+    {
+      name Auditoria - Consultar Logs de Operações Sensíveis,
+      request {
+        method GET,
+        header [
+          { key Authorization, value Bearer token_auditor_matriz }
+        ],
+        url {
+          raw httpsapi.raizesdonordeste.com.brv1auditorialogstipo=CANCELAMENTO,
+          protocol https,
+          host [api, raizesdonordeste, com, br],
+          path [v1, auditoria, logs],
+          query [
+            { key tipo, value CANCELAMENTO }
+          ]
+        }
+      }
+    }
+  ]
+}
